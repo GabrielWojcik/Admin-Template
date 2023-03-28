@@ -32,7 +32,7 @@ export default function Autenticacao() {
         <div className="flex  h-screen items-center justify-center">
             <div className="hidden md:block md:w-1/2 lg:w-2/3">
                 <img 
-                src="https://source.unsplash.com/random" 
+                src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60" 
                 alt="Imagem da Tela de Autenticação" 
                 className="h-screen w-full object-cover"
                 />

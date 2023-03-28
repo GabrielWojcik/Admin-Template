@@ -1,3 +1,4 @@
+import EscolherAvatar from "../src/components/template/EscolherAvatar";
 import Layout from "../src/components/template/Layout";
 
 export default function Ajustes() {
@@ -6,7 +7,7 @@ export default function Ajustes() {
     titulo="Ajustes & Configurações"
     subtitulo="Personalize o sistema por aqui"
     >
-      <h3>Conteudo</h3>
+      <EscolherAvatar />
     </Layout>
   )
 }
