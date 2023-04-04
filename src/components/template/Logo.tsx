@@ -1,11 +1,11 @@
-import { createContext, useState } from "react"
+import { createContext, Dispatch, SetStateAction, useState } from "react"
 import Bmw from "../Images/bmw-icon.avif"
-import Image from "next/image"
+import Image, { StaticImageData } from "next/image"
 
 
 interface ImagemContextProps {
     imagemAtiva?: any
-    setImagemAtiva: (event: any) => void
+    setImagemAtiva: Dispatch<SetStateAction<StaticImageData>>
 }
 
 const imagemPerfilContext = createContext<ImagemContextProps>({
@@ -15,9 +15,7 @@ const imagemPerfilContext = createContext<ImagemContextProps>({
 
 
 export function Logo () {
-
     const[imagemAtiva, setImagemAtiva] = useState(Bmw)
-    console.log('setImagemAtiva', typeof(setImagemAtiva))
 
     return(
         <imagemPerfilContext.Provider value={{imagemAtiva, setImagemAtiva}}>

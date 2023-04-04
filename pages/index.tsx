@@ -1,20 +1,13 @@
 import Layout from "../src/components/template/Layout";
-// import Tabela from "../src/components/template/Tabela";
+import Tabela from "../src/components/template/Tabela";
 
-export default function Home() {
-
-  // const  {imagem, alternarImagem} = useAppImage()
-
-  // console.log('IMAGEM NO INDEX', imagem)
-  // console.log('alternarImagem', alternarImagem)
-
+export default function Home() { 
   return (
     <Layout
     titulo="Pagina inicial"
-    subtitulo="Estamos construindo um template admin"
+    subtitulo=""
     >
-      <h3>Conteudo</h3>
-      {/* <Tabela /> */}
+      <Tabela />
     </Layout>
   )
 }

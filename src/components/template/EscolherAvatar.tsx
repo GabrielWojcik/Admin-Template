@@ -11,8 +11,13 @@ import imagemPerfilContext from './Logo';
 export default function EscolherAvatar() {
     const { imagemAtiva, setImagemAtiva } = useContext(imagemPerfilContext)
 
+    // const setImagemAtiva = useContext(imagemPerfilContext)
+    console.log('setImagemAtiva', setImagemAtiva)
+
     const [modalIsOpen, setIsOpen] = useState(false);
     const [imageSelected, setImageSelected] = useState(Bmw);
+
+    console.log('setImagemAtiva EscolherAvatar',typeof(setImagemAtiva))
 
     const customStyles = {
         content: {
@@ -74,25 +79,23 @@ export default function EscolherAvatar() {
                             <div className='flex justify-between mb-3'>
                                 <h2>Selecione uma Imagem</h2>
                                 <button onClick={() => setIsOpen(false)}> 
-                                <IconeFechar /> 
+                                {/* <IconeFechar />  */} X
                                 </button>
                             </div>
                             <div className="flex gap-1">
                                 <div 
-                                onClick={ () =>
-                                    setImagemAtiva(Gtr)
-                                } 
+                                onClick={ (e) => setImagemAtiva} 
                                 className='cursor-pointer'>
                                     <Image src={Gtr} alt='' width={100} height={100} />
                                 </div>
                                 <div
-                                onClick={(e) => setImagemAtiva(e.target["data-loaded-src"])}
+                                // onClick={(e) => setImagemAtiva(e.target["data-loaded-src"])}
                                 className='cursor-pointer'
                                 >
                                     <Image src={Bmw} alt='' width={100} height={100} />
                                 </div>
                                 <div
-                                onClick={(e) => setImagemAtiva(e.target["data-loaded-src"])}
+                                // onClick={(e) => setImagemAtiva(e.target["data-loaded-src"])}
                                 className='cursor-pointer'
                                 >
                                     <Image src={Mustang} alt='' width={100} height={100} />

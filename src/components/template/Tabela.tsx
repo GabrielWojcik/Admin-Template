@@ -1,127 +1,213 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTable } from 'react-table'
+import * as React from 'react'
+import { useState } from 'react'
 
-import makeData from './makeData'
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 
-const Styles = styled.div`
-  padding: 1rem;
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
+}
 
-  table {
-    border-spacing: 0;
-    border: 1px solid black;
+const defaultData: Person[] = [
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 24,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
+  {
+    firstName: 'tandy',
+    lastName: 'miller',
+    age: 40,
+    visits: 40,
+    status: 'Single',
+    progress: 80,
+  },
+  {
+    firstName: 'joe',
+    lastName: 'dirte',
+    age: 45,
+    visits: 20,
+    status: 'Complicated',
+    progress: 10,
+  },
+]
 
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
-    }
+const columnHelper = createColumnHelper<Person>()
 
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
+const columns = [
+  columnHelper.accessor(row => row.lastName, {
+    id: 'itemTrocado',
+    cell: info => <i>{info.getValue()}</i>,
+    header: () => <span>Item Trocado</span>,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Marca',
+    cell: info => info.renderValue(),
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Data</span>,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Valor',
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Mecanica',
+  }),
+]
 
-      :last-child {
-        border-right: 0;
-      }
-    }
-  }
-`
+export default function Tabela() {
+  const [data, setData] = React.useState(() => [...defaultData])
+  const [openModal, setOpenModal] = useState(false)
+  const [exchangedItem, setExchangedItem] = useState<string>()
+  const [brand, setBrand] = useState<string>()
+  const [date, setDate] = useState<string>()
+  const [value, setValue] = useState<string>()
+  const [mechanical, setMechanical] = useState<string>()
 
-function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
+  const table = useReactTable({
     data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
   })
 
-  // Render the UI for your table
+
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
+   <div> 
+    <div className='flex justify-end items-center w-full h-10 gap-2'>
+        <button 
+          className='bg-green-500 w-8 h-8 rounded hover:bg-green-400'
+          onClick={() => setOpenModal(true)}
+          >
+          +
+        </button>
+        <button className='bg-red-500 w-8 h-8 rounded hover:bg-red-400'>
+          -
+        </button>
+    </div>
+    {
+      openModal ? 
+      <div className='bg-white w-full h-full rounded z-10'>
+        <div className='flex justify-end items-center right-0 h-10 gap-2 px-2'>
+            <div className='flex w-full font-bold p-1'>
+              <h1 className='text-black'>Cadastrar Nova Troca</h1>
+            </div>
+            <button 
+              className='bg-red-500 w-8 h-8 rounded hover:bg-red-400'
+              onClick={() => setOpenModal(false)}
+              >
+              X
+            </button>
+        </div>
+
+        <div className='flex flex-col text-black p-2'>
+          <label>Item Trocado</label>
+          <input 
+          className='border-solid border-2 w-3/6' 
+          type='text'
+          onChange={(e) => setExchangedItem(e.target.value)} 
+          />
+          
+          <label>Marca</label>
+          <input 
+          className='border-solid border-2 w-3/6' 
+          type='text' 
+          onChange={(e) => setBrand(e.target.value)} 
+
+          />
+        
+          <label>Data</label>
+          <input 
+          className='border-solid border-2 w-3/6' 
+          type='text' 
+          onChange={(e) => setDate(e.target.value)} 
+          />
+          
+          <label>Valor</label>
+          <input 
+          className='border-solid border-2 w-3/6' 
+          type='text' 
+          onChange={(e) => setValue(e.target.value)} 
+          />
+        
+          <label>Mecânica</label>
+          <input 
+          className='border-solid border-2 w-3/6' 
+          type='text' 
+          onChange={(e) => setMechanical(e.target.value)} 
+          />
+        </div>
+
+        <div className='p-2'>
+            <button className='bg-green-500 hover:bg-green-400 text-white rounded w-3/6 h-8'>
+              Adicionar
+            </button>
+        </div>
+
+      </div>
+      :
+      false
+    }
+
+    <div className="mt-2 w-full bg-gray-100 text-gray-900 rounded">
+      <table className='w-full'>
+        <thead className='w-full bg-gradient-to-r from-indigo-500 via-blue-600 to-purple-800 text-white'>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th  key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
             </tr>
-          )
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr className='text-center' key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td  key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          {table.getFooterGroups().map(footerGroup => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot>
+      </table>
+    </div>
+    </div>
   )
 }
 
-function App() {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        columns: [
-          {
-            Header: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            accessor: 'lastName',
-          },
-        ],
-      },
-      {
-        Header: 'Info',
-        columns: [
-          {
-            Header: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  )
-
-  const data = React.useMemo(() => makeData(20), [])
-
-  return (
-    <Styles>
-      <Table columns={columns} data={data} />
-    </Styles>
-  )
-}
-
-export default App
