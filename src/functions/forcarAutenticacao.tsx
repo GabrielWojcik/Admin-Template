@@ -2,12 +2,12 @@ import Head from 'next/head'
 import Image from "next/image"
 import  router  from "next/router"
 import loading from "../../public/images/loading.gif"
-import useAuth from "../data/hook/useAuth"
+import UseAuth from "../data/hook/useAuth"
 
 
 export default function forcarAutenticacao(jsx) {
 
-    const { usuario, carregando } = useAuth()
+    const { usuario, carregando } = UseAuth()
     
     function renderizarConteudo() {
         return (
