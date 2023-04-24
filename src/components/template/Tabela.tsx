@@ -1,5 +1,12 @@
 import * as React from 'react'
 import { useState } from 'react'
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
+// import Alert from '@mui/material/Alert';
+
+// import Stack from '@mui/material/Stack';
+
 
 import {
   createColumnHelper,
@@ -71,10 +78,37 @@ export default function Tabela() {
   const [data, setData] = React.useState(() => [...defaultData])
   const [openModal, setOpenModal] = useState(false)
   const [exchangedItem, setExchangedItem] = useState<string>()
+  const [title, setTitle] = useState<string>()
+  const [description, setDescription] = useState<string>()
   const [brand, setBrand] = useState<string>()
   const [date, setDate] = useState<string>()
   const [value, setValue] = useState<string>()
   const [mechanical, setMechanical] = useState<string>()
+
+  async function register(){
+    const response = await fetch('http://localhost:3333/items', {
+    method: 'POST',
+      headers: {
+        'Accept':'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: title,
+        Description: description,
+        Marca: brand,
+        Valor: value,
+        Mecanica: mechanical
+      }),
+    })
+    const resp = response.json()
+    .then(response => resp.json())
+    .then(json => toast.success('Item Cadastrado com Sucesso!',{
+      position: toast.POSITION.BOTTOM_LEFT
+    }))
+    .catch(err => toast.error(`Erro ao inserir um item ${err} `,{
+      position: toast.POSITION.BOTTOM_LEFT
+    }))
+  }
 
   const table = useReactTable({
     data,
@@ -87,7 +121,7 @@ export default function Tabela() {
    <div> 
     <div className='flex justify-end items-center w-full h-10 gap-2'>
         <button 
-          className='bg-green-500 w-8 h-8 rounded hover:bg-green-400'
+          className='bg-green-500 w-8 h-8 rounded hover:bg-green-400 '
           onClick={() => setOpenModal(true)}
           >
           +
@@ -98,9 +132,10 @@ export default function Tabela() {
     </div>
     {
       openModal ? 
-      <div className='bg-white w-full h-full rounded z-10'>
-        <div className='flex justify-end items-center right-0 h-10 gap-2 px-2'>
-            <div className='flex w-full font-bold p-1'>
+    <div className='flex justify-center w-full bg-red'>
+      <div className='bg-white w-5/12 h-full rounded z-10 absolute top-0 py-5 '>
+        <div className='flex justify-center items-center right-0 h-10 gap-2 px-2'>
+            <div className='flex justify-center w-full font-bold p-1'>
               <h1 className='text-black'>Cadastrar Nova Troca</h1>
             </div>
             <button 
@@ -111,51 +146,83 @@ export default function Tabela() {
             </button>
         </div>
 
-        <div className='flex flex-col text-black p-2'>
-          <label>Item Trocado</label>
+        <div className='flex justify-center items-center flex-col text-black p-2'>
+
+          <label className={`
+          text-purple-900 font-bold
+          `}>Titulo</label>
           <input 
-          className='border-solid border-2 w-3/6' 
+          className='border-solid border-2 w-3/6 border-purple-300 rounded p-1 outline-none' 
+          type='text'
+          onChange={(e) => setTitle(e.target.value)} 
+          />
+
+          <label className={`
+          text-purple-900 font-bold
+          `}>Descrição</label>
+          <input 
+          className='border-solid border-2 w-3/6 border-purple-300 rounded p-1 outline-none' 
+          type='text'
+          onChange={(e) => setDescription(e.target.value)} 
+          />
+          
+          <label className={`
+          text-purple-900 font-bold
+          `}>Item Trocado</label>
+          <input 
+          className='border-solid border-2 w-3/6  border-purple-300 rounded p-1 outline-none' 
           type='text'
           onChange={(e) => setExchangedItem(e.target.value)} 
           />
           
-          <label>Marca</label>
+          <label className={`
+          text-purple-900 font-bold
+          `}>Marca</label>
           <input 
-          className='border-solid border-2 w-3/6' 
+          className='border-solid border-2 w-3/6  border-purple-300 rounded p-1 outline-none' 
           type='text' 
           onChange={(e) => setBrand(e.target.value)} 
 
           />
-        
-          <label>Data</label>
-          <input 
-          className='border-solid border-2 w-3/6' 
-          type='text' 
-          onChange={(e) => setDate(e.target.value)} 
-          />
           
-          <label>Valor</label>
+          <label className={`
+          text-purple-900 font-bold
+          `}>Valor</label>
           <input 
-          className='border-solid border-2 w-3/6' 
-          type='text' 
+          className='border-solid border-2 w-3/6  border-purple-300 rounded p-1 outline-none' 
+          type='number' 
           onChange={(e) => setValue(e.target.value)} 
           />
         
-          <label>Mecânica</label>
+          <label className={`
+          text-purple-900 font-bold
+          `}>Mecânica</label>
           <input 
-          className='border-solid border-2 w-3/6' 
+          className='border-solid border-2 w-3/6  border-purple-300 rounded p-1 outline-none' 
           type='text' 
           onChange={(e) => setMechanical(e.target.value)} 
           />
+
+          <label className={`
+          text-purple-900 font-bold
+          `}>Data</label>
+          <input 
+          className='border-solid border-2 w-3/6  border-purple-300 rounded p-1 outline-none' 
+          type='number' 
+          onChange={(e) => setDate(e.target.value)} 
+          />
         </div>
 
-        <div className='p-2'>
-            <button className='bg-green-500 hover:bg-green-400 text-white rounded w-3/6 h-8'>
+        <div className='flex justify-center p-2'>
+            <button 
+            onClick={() => register()}
+            className='bg-green-500 hover:bg-green-400 text-white rounded w-3/6 h-8 outline-none'>
               Adicionar
             </button>
         </div>
 
       </div>
+    </div>
       :
       false
     }
@@ -207,6 +274,7 @@ export default function Tabela() {
         </tfoot>
       </table>
     </div>
+      <ToastContainer />
     </div>
   )
 }
